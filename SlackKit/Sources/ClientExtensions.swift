@@ -30,8 +30,32 @@ extension Client {
         return channels.filter{$0.1.name == stripString(name)}.first?.0
     }
     
+    public func getChannelByID(id: String) -> Channel? {
+        let matches = channels.filter {
+            return $0.1.id == id
+        }
+        
+        if matches.count > 0 {
+            return matches[0].1
+        } else {
+            return nil
+        }
+    }
+    
     public func getUserIDByName(name: String) -> String? {
         return users.filter{$0.1.name == stripString(name)}.first?.0
+    }
+    
+    public func getUserByID(id: String) -> User? {
+        let matches = users.filter {
+            return $0.1.id == id
+        }
+        
+        if matches.count > 0 {
+            return matches[0].1
+        } else {
+            return nil
+        }
     }
     
     public func getImIDForUserWithID(id: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {

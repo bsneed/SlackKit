@@ -111,7 +111,7 @@ public class SlackWebAPI {
     
     //MARK: - RTM
     public func rtmStart(success success: ((response: [String: AnyObject])->Void)?, failure: FailureClosure?) {
-        client.api.request(.RTMStart, token: client.token, parameters: nil, successClosure: {
+        client.api.request(.RTMStart, token: client.token, parameters: ["no_unreads": "1"], successClosure: {
                 (response) -> Void in
                 success?(response: response)
             }) {(error) -> Void in
