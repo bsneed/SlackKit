@@ -32,6 +32,7 @@ internal enum SlackAPIEndpoint: String {
     case ChannelsMark = "channels.mark"
     case ChannelsSetPurpose = "channels.setPurpose"
     case ChannelsSetTopic = "channels.setTopic"
+    case ChannelsLeave = "channels.leave"
     case ChatDelete = "chat.delete"
     case ChatPostMessage = "chat.postMessage"
     case ChatUpdate = "chat.update"
@@ -154,6 +155,15 @@ public class SlackWebAPI {
                 success?(channels: channels)
             }) {(error) -> Void in
                 failure?(error: error)
+        }
+    }
+
+    public func leaveChannel(channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
+        mark(.ChannelsLeave, channel: channel, timestamp: timestamp, success: {
+            (ts) -> Void in
+            success?(ts:timestamp)
+        }) {(error) -> Void in
+            failure?(error: error)
         }
     }
     
@@ -657,6 +667,16 @@ public class SlackWebAPI {
                 success?(channels: response[type.rawValue+"s"] as? [[String: AnyObject]])
             }) {(error) -> Void in
                 failure?(error: error)
+        }
+    }
+
+    private func leave(endpoint: SlackAPIEndpoint, channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject] = ["channel": channel, "ts": timestamp]
+        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+            (response) -> Void in
+            success?(ts: timestamp)
+        }) {(error) -> Void in
+            failure?(error: error)
         }
     }
     
